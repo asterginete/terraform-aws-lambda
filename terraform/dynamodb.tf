@@ -1,8 +1,9 @@
-resource "aws_dynamodb_table" "user_table" {
-  name           = var.dynamodb_table_name
+# Users Table
+resource "aws_dynamodb_table" "users" {
+  name           = "UsersTable"
   billing_mode   = "PROVISIONED"
-  read_capacity  = 1
-  write_capacity = 1
+  read_capacity  = 5
+  write_capacity = 5
   hash_key       = "email"
 
   attribute {
@@ -10,48 +11,116 @@ resource "aws_dynamodb_table" "user_table" {
     type = "S"
   }
 
+  tags = {
+    Name        = "UsersTable"
+    Environment = var.environment
+  }
+}
+
+# Chat Messages Table
+resource "aws_dynamodb_table" "chat_messages" {
+  name           = "ChatMessagesTable"
+  billing_mode   = "PROVISIONED"
+  read_capacity  = 5
+  write_capacity = 5
+  hash_key       = "chat_id"
+  range_key      = "timestamp"
+
   attribute {
-    name = "name"
+    name = "chat_id"
     type = "S"
   }
 
   attribute {
-    name = "age"
-    type = "N"
-  }
-
-  attribute {
-    name = "address"
-    type = "S"
-  }
-
-  attribute {
-    name = "phone"
-    type = "S"
-  }
-
-  attribute {
-    name = "image_link"
-    type = "S"
-  }
-
-  attribute {
-    name = "linkedin_link"
-    type = "S"
-  }
-
-  attribute {
-    name = "github_link"
+    name = "timestamp"
     type = "S"
   }
 
   tags = {
-    Name        = "UserTable"
-    Environment = "production"
+    Name        = "ChatMessagesTable"
+    Environment = var.environment
   }
 }
 
-output "dynamodb_table_arn" {
+# Feedback Table
+resource "aws_dynamodb_table" "feedback" {
+  name           = "FeedbackTable"
+  billing_mode   = "PROVISIONED"
+  read_capacity  = 5
+  write_capacity = 5
+  hash_key       = "feedback_id"
+
+  attribute {
+    name = "feedback_id"
+    type = "S"
+  }
+
+  tags = {
+    Name        = "FeedbackTable"
+    Environment = var.environment
+  }
+}
+
+# Notifications Table
+resource "aws_dynamodb_table" "notifications" {
+  name           = "NotificationsTable"
+  billing_mode   = "PROVISIONED"
+  read_capacity  = 5
+  write_capacity = 5
+  hash_key       = "notification_id"
+
+  attribute {
+    name = "notification_id"
+    type = "S"
+  }
+
+  tags = {
+    Name        = "NotificationsTable"
+    Environment = var.environment
+  }
+}
+
+# User Sessions Table
+resource "aws_dynamodb_table" "user_sessions" {
+  name           = "UserSessionsTable"
+  billing_mode   = "PROVISIONED"
+  read_capacity  = 5
+  write_capacity = 5
+  hash_key       = "session_id"
+
+  attribute {
+    name = "session_id"
+    type = "S"
+  }
+
+  tags = {
+    Name        = "UserSessionsTable"
+    Environment = var.environment
+  }
+}
+
+# Outputs for each table's ARN
+output "users_table_arn" {
   description = "The ARN of the DynamoDB table for users."
-  value       = aws_dynamodb_table.user_table.arn
+  value       = aws_dynamodb_table.users.arn
+}
+
+output "chat_messages_table_arn" {
+  description = "The ARN of the DynamoDB table for chat messages."
+  value       = aws_dynamodb_table.chat_messages.arn
+}
+
+output "feedback_table_arn" {
+  description = "The ARN of the DynamoDB table for feedback."
+  value       = aws_dynamodb_table.feedback.arn
+}
+
+output "notifications_table_arn" {
+  description = "The ARN of the DynamoDB table for notifications."
+  value       = aws_dynamodb_table.notifications.arn
+}
+
+output "user_sessions_table_arn" {
+  description = "The ARN of the DynamoDB table for user sessions."
+  value       = aws_dynamodb_table.user_sessions.arn
 }

@@ -1,0 +1,21 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+pytest = "*"
+black = "*"
+
+[packages]
+boto3 = "*"  # AWS SDK for Python, useful for interacting with AWS services like DynamoDB, S3, etc.
+flask = "*"  # Lightweight web framework, if you're using it for any web-based backend components.
+flask-cors = "*"  # Handling CORS for Flask applications.
+flask-jwt-extended = "*"  # JWT-based authentication for Flask.
+bcrypt = "*"  # For hashing passwords.
+elasticsearch = "*"  # Python client for Elasticsearch.
+redis = "*"  # Python client for Redis.
+requests = "*"  # For making HTTP requests, if needed.
+
+[requires]
+python_version = "3.8"

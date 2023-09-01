@@ -1,49 +1,66 @@
 provider "aws" {
-  region  = "us-west-1" # Change this to your desired region
-  version = "~> 3.0"   # Specify the version of AWS provider you want to use
+  region = var.aws_region
 }
 
-# Fetch the current account ID and region
-data "aws_caller_identity" "current" {}
-data "aws_region" "current" {}
-
-# S3 Backend for storing Terraform state (Optional but recommended for real projects)
-terraform {
-  backend "s3" {
-    bucket = "my-terraform-backend-bucket"
-    key    = "path/to/my/key"
-    region = "us-west-1"
-  }
-}
-
-# DynamoDB table for Terraform state locking (Optional but recommended for real projects)
-resource "aws_dynamodb_table" "terraform_locks" {
-  name           = "terraform-up-and-running-locks"
-  billing_mode   = "PAY_PER_REQUEST"
-  hash_key       = "LockID"
-  attribute {
-    name = "LockID"
-    type = "S"
-  }
-}
-
-# Include other Terraform configuration files
+# DynamoDB for Users, Chats, Feedback, Notifications, and Sessions
 module "dynamodb" {
-  source = "./dynamodb.tf"
+  source = "./dynamodb"
 }
 
+# Lambda Functions for CRUD operations, Authentication, Chat, Feedback, and Notifications
 module "lambda" {
-  source = "./lambda.tf"
+  source = "./lambda"
 }
 
+# API Gateway for routing requests to Lambda functions
 module "apigateway" {
-  source = "./apigateway.tf"
+  source = "./apigateway"
 }
 
+# IAM roles and permissions for Lambda and other services
 module "iam" {
-  source = "./iam.tf"
+  source = "./iam"
 }
 
+# SSM for storing secrets
 module "ssm" {
-  source = "./ssm.tf"
+  source = "./ssm"
 }
+
+# S3 for storing user images and other static assets
+module "s3" {
+  source = "./s3"
+}
+
+# Optional: SNS for notifications
+module "sns" {
+  source = "./sns"
+}
+
+# Optional: Elasticsearch for advanced search capabilities
+module "elasticsearch" {
+  source = "./elasticsearch"
+}
+
+# Optional: Redis or Memcached for caching
+module "cache" {
+  source = "./cache"
+}
+
+# Outputs to retrieve important information after resources have been created or updated
+output "api_endpoint" {
+  description = "The endpoint URL of the API Gateway."
+  value       = module.apigateway.api_endpoint_url
+}
+
+output "dynamodb_table_arn" {
+  description = "The ARN of the DynamoDB table for users."
+  value       = module.dynamodb.dynamodb_table_arn
+}
+
+output "s3_bucket_name" {
+  description = "The name of the S3 bucket for user images."
+  value       = module.s3.bucket_name
+}
+
+# ... Additional outputs for other resources as needed
