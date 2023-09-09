@@ -1,0 +1,16 @@
+{
+  "name": "authentication-lambda",
+  "version": "1.0.0",
+  "description": "Lambda functions for user authentication",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Your Name",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.1040.0",
+    "bcrypt": "^5.0.1",
+    "jsonwebtoken": "^8.5.1"
+  }
+}
